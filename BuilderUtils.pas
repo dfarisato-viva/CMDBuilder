@@ -25,6 +25,7 @@ type
     ProductName: string;
     ProductVersion: string;
     Copyright: string;
+    CustomKey: String;
   end;
   TBuildType = (btFastBuild, btNormalBuild, btPackage, btModules, btAppBos,
                 btStandAlone, btIsapi, btBPL, btNoIsapi, btBOSBase, btBOSBaseUI);
@@ -62,15 +63,16 @@ type
     FOvwTools   : String;
     FXlsConv    : String;
     FCaseStudio : String;
-    FSqlServer: String;
+    FSqlServer  : String;
+    FAppGroup   : String;
     class var FInstance: TRecConfig;
-    Constructor Create(APathBOS, APathAPPBOS, APathAlone, AOvwTools, AXlsConv, ACaseStudio, ASqlServer: String); Reintroduce;
+    Constructor Create(APathBOS, APathAPPBOS, APathAlone, AOvwTools, AXlsConv, ACaseStudio, ASqlServer, AAppGroup: String); Reintroduce;
   public
 
     Destructor Destroy;
     class function GetInstance: TRecConfig;overload;
-    class function GetInstance(APathBOS, APathAPPBOS, APathAlone, AOvwTools, AXlsConv, ACaseStudio, ASqlServer: String): TRecConfig; overload;
-    function SetValues(APathBOS, APathAPPBOS, APathAlone, AOvwTools, AXlsConv, ACaseStudio, ASqlServer: String): TRecConfig;
+    class function GetInstance(APathBOS, APathAPPBOS, APathAlone, AOvwTools, AXlsConv, ACaseStudio, ASqlServer, AAppGroup: String): TRecConfig; overload;
+    function SetValues(APathBOS, APathAPPBOS, APathAlone, AOvwTools, AXlsConv, ACaseStudio, ASqlServer, AAppGroup: String): TRecConfig;
     class procedure ReleaseInstance;
 
     Property PathBOS    : String read FPathBOS write FPathBOS;
@@ -80,6 +82,7 @@ type
     Property XlsConv    : String read FXlsConv write FXlsConv;
     Property CaseStudio : String read FCaseStudio write FCaseStudio;
     Property SqlServer  : String read FSqlServer write FSqlServer;
+    Property AppGroup   : String read FAppGroup write FAppGroup;
   end;
 
   function KillProcessByName(const ProcessName: string): Boolean;
@@ -158,23 +161,53 @@ begin
   Result := WinExec(PAnsiChar(AnsiString(Command)), SW_HIDE) > 31;
 end;
 
+function GetFileProperty(const FileName, PropertyName: string): string;
+var
+  VerInfoSize: DWORD;
+  VerInfo: Pointer;
+  VerValueSize: DWORD;
+  VerValue: Pointer;
+  Dummy: DWORD;
+  Translation: Pointer;
+  TranslationSize: DWORD;
+  LangCharset: string;
+begin
+  Result := '';
+  VerInfoSize := GetFileVersionInfoSize(PChar(FileName), Dummy);
+  if VerInfoSize > 0 then
+  begin
+    GetMem(VerInfo, VerInfoSize);
+    try
+      if GetFileVersionInfo(PChar(FileName), 0, VerInfoSize, VerInfo) then
+      begin
+        // Ottieni la lingua e il charset
+        if VerQueryValue(VerInfo, '\VarFileInfo\Translation', Translation, TranslationSize) then
+        begin
+          LangCharset := Format('%.4x%.4x',
+            [LoWord(Integer(Translation^)), HiWord(Integer(Translation^))]);
+
+          // Query la proprietà specifica
+          if VerQueryValue(VerInfo,
+            PChar('\StringFileInfo\' + LangCharset + '\' + PropertyName),
+            VerValue, VerValueSize) then
+          begin
+            Result := PChar(VerValue);
+          end;
+        end;
+      end;
+    finally
+      FreeMem(VerInfo, VerInfoSize);
+    end;
+  end;
+end;
+
+
 function GetFileVersion(const FileName: string): TFileVersionInfo;
 var
   InfoSize, Wnd: DWORD;
   VerBuf: Pointer;
   FI: PVSFixedFileInfo;
   VerSize: DWORD;
-
-  function GetStringFileInfo(const Key: string): string;
-  var
-    Buffer: PChar;
-    BufSize: DWORD;
-  begin
-    Result := '';
-    if VerQueryValue(VerBuf, PChar('\StringFileInfo\040904B0\' + Key),
-                     Pointer(Buffer), BufSize) then
-      Result := Buffer;
-  end;
 
 begin
   FillChar(Result, SizeOf(Result), 0);
@@ -196,13 +229,13 @@ begin
     end;
 
     // Ottieni informazioni stringa
-    Result.CompanyName := GetStringFileInfo('CompanyName');
-    Result.FileDescription := GetStringFileInfo('FileDescription');
-    Result.FileVersion := GetStringFileInfo('FileVersion');
-    Result.ProductName := GetStringFileInfo('ProductName');
-    Result.ProductVersion := GetStringFileInfo('ProductVersion');
-    Result.Copyright := GetStringFileInfo('LegalCopyright');
-
+    Result.CompanyName := GetFileProperty(FileName, 'CompanyName');
+    Result.FileDescription := GetFileProperty(FileName, 'FileDescription');
+    Result.FileVersion := GetFileProperty(FileName, 'FileVersion');
+    Result.ProductName := GetFileProperty(FileName, 'ProductName');
+    Result.ProductVersion := GetFileProperty(FileName, 'ProductVersion');
+    Result.Copyright := GetFileProperty(FileName, 'LegalCopyright');
+    Result.CustomKey := GetFileProperty(FileName, 'Vivaticket');
   finally
     FreeMem(VerBuf, InfoSize);
   end;
@@ -297,7 +330,7 @@ end;
 { TRecConfig }
 
 constructor TRecConfig.Create(APathBOS, APathAPPBOS, APathAlone, AOvwTools,
-  AXlsConv, ACaseStudio, ASqlServer: String);
+  AXlsConv, ACaseStudio, ASqlServer, AAppGroup: String);
 begin
   Inherited Create;
   FPathBOS    := APathBOS;
@@ -307,6 +340,7 @@ begin
   FXlsConv    := AXlsConv;
   FCaseStudio := ACaseStudio;
   FSqlServer  := ASqlServer;
+  FAppGroup   := AAppGroup;
 end;
 
 destructor TRecConfig.Destroy;
@@ -318,14 +352,14 @@ end;
 class function TRecConfig.GetInstance: TRecConfig;
 begin
   if FInstance = nil then
-    FInstance := TRecConfig.Create('', '', '', '', '', '', '');
+    FInstance := TRecConfig.Create('', '', '', '', '', '', '', '');
   Result := FInstance;
 end;
 
-class function TRecConfig.GetInstance(APathBOS, APathAPPBOS, APathAlone, AOvwTools, AXlsConv, ACaseStudio, ASqlServer: String): TRecConfig;
+class function TRecConfig.GetInstance(APathBOS, APathAPPBOS, APathAlone, AOvwTools, AXlsConv, ACaseStudio, ASqlServer, AAppGroup: String): TRecConfig;
 begin
   if FInstance = nil then
-    FInstance := TRecConfig.Create(APathBOS, APathAPPBOS, APathAlone, AOvwTools, AXlsConv, ACaseStudio, ASqlServer);
+    FInstance := TRecConfig.Create(APathBOS, APathAPPBOS, APathAlone, AOvwTools, AXlsConv, ACaseStudio, ASqlServer, AAppGroup);
   Result := FInstance;
 end;
 
@@ -339,7 +373,7 @@ begin
 end;
 
 function TRecConfig.SetValues(APathBOS, APathAPPBOS, APathAlone,
-  AOvwTools, AXlsConv, ACaseStudio, ASqlServer: String): TRecConfig;
+  AOvwTools, AXlsConv, ACaseStudio, ASqlServer, AAppGroup: String): TRecConfig;
 begin
   FPathBOS    := APathBOS;
   FPathAPPBOS := APathAPPBOS;
@@ -348,6 +382,7 @@ begin
   FXlsConv    := AXlsConv;
   FCaseStudio := ACaseStudio;
   FSqlServer  := ASqlServer;
+  FAppGroup   := AAppGroup;
 end;
 
 
