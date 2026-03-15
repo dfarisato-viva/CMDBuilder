@@ -32,7 +32,7 @@ object frmTrayMain: TfrmTrayMain
       Left = 0
       Top = 0
       Width = 653
-      Height = 190
+      Height = 208
       Align = alTop
       BevelOuter = bvLowered
       TabOrder = 0
@@ -71,38 +71,51 @@ object frmTrayMain: TfrmTrayMain
       end
       object Label2: TLabel
         Left = 139
-        Top = 138
+        Top = 163
         Width = 27
         Height = 13
         Caption = 'Major'
       end
       object Label3: TLabel
         Left = 195
-        Top = 137
+        Top = 162
         Width = 26
         Height = 13
         Caption = 'Minor'
       end
       object Label4: TLabel
         Left = 243
-        Top = 136
+        Top = 161
         Width = 38
         Height = 13
         Caption = 'Release'
       end
       object Label5: TLabel
         Left = 291
-        Top = 136
+        Top = 161
         Width = 22
         Height = 13
         Caption = 'Build'
       end
       object Label6: TLabel
         Left = 344
-        Top = 137
+        Top = 162
         Width = 207
         Height = 13
         Caption = 'Version Info in Company Name Field (V_XX)'
+      end
+      object Label7: TLabel
+        Left = 16
+        Top = 78
+        Width = 71
+        Height = 13
+        Caption = 'DB letter :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
       end
       object cbConfiguration: TComboBox
         Left = 16
@@ -142,18 +155,18 @@ object frmTrayMain: TfrmTrayMain
       end
       object btnClearLog: TButton
         Left = 272
-        Top = 7
+        Top = 27
         Width = 80
-        Height = 25
+        Height = 23
         Caption = 'Clear Log'
         TabOrder = 4
         OnClick = btnClearLogClick
       end
       object btnMenu: TButton
         Left = 272
-        Top = 37
+        Top = 51
         Width = 80
-        Height = 25
+        Height = 23
         Caption = 'Men'#249
         DoubleBuffered = True
         DropDownMenu = PopupMenu
@@ -172,9 +185,9 @@ object frmTrayMain: TfrmTrayMain
       end
       object lbDrive: TListBox
         Left = 358
-        Top = 24
+        Top = 27
         Width = 259
-        Height = 69
+        Height = 96
         ItemHeight = 13
         TabOrder = 7
       end
@@ -232,9 +245,9 @@ object frmTrayMain: TfrmTrayMain
       end
       object btnSetting: TButton
         Left = 272
-        Top = 68
+        Top = 75
         Width = 80
-        Height = 25
+        Height = 23
         Caption = 'Settings'
         HotImageIndex = 4
         Images = cxImageList
@@ -243,7 +256,7 @@ object frmTrayMain: TfrmTrayMain
       end
       object btDBVersion: TcxButton
         Left = 136
-        Top = 101
+        Top = 126
         Width = 81
         Height = 25
         Caption = 'DB Version'
@@ -252,7 +265,7 @@ object frmTrayMain: TfrmTrayMain
       end
       object btSession: TcxButton
         Left = 623
-        Top = 99
+        Top = 124
         Width = 26
         Height = 25
         OptionsImage.Glyph.SourceDPI = 96
@@ -295,7 +308,7 @@ object frmTrayMain: TfrmTrayMain
       end
       object eSession: TEdit
         Left = 358
-        Top = 101
+        Top = 126
         Width = 259
         Height = 21
         TabOrder = 14
@@ -303,7 +316,7 @@ object frmTrayMain: TfrmTrayMain
       end
       object brChangePwd: TcxButton
         Left = 223
-        Top = 101
+        Top = 126
         Width = 129
         Height = 25
         Caption = 'Change password'
@@ -312,7 +325,7 @@ object frmTrayMain: TfrmTrayMain
       end
       object gbEditor: TGroupBox
         Left = 16
-        Top = 77
+        Top = 104
         Width = 112
         Height = 100
         Caption = 'Editor'
@@ -419,16 +432,25 @@ object frmTrayMain: TfrmTrayMain
       end
       object btnUpdVersion: TcxButton
         Left = 560
-        Top = 153
+        Top = 178
         Width = 88
         Height = 25
         Caption = 'Update Version'
         TabOrder = 17
         OnClick = btnUpdVersionClick
       end
+      object btnModernInterface: TcxButton
+        Left = 272
+        Top = 100
+        Width = 80
+        Height = 23
+        Caption = 'Modern UI'
+        TabOrder = 23
+        OnClick = btnModernInterfaceClick
+      end
       object eMajor: TSpinEdit
         Left = 139
-        Top = 155
+        Top = 180
         Width = 46
         Height = 22
         AutoSize = False
@@ -439,7 +461,7 @@ object frmTrayMain: TfrmTrayMain
       end
       object eMinor: TSpinEdit
         Left = 195
-        Top = 155
+        Top = 180
         Width = 45
         Height = 22
         MaxValue = 0
@@ -449,7 +471,7 @@ object frmTrayMain: TfrmTrayMain
       end
       object eRelease: TSpinEdit
         Left = 243
-        Top = 155
+        Top = 180
         Width = 45
         Height = 22
         MaxValue = 0
@@ -459,7 +481,7 @@ object frmTrayMain: TfrmTrayMain
       end
       object eBuild: TSpinEdit
         Left = 291
-        Top = 155
+        Top = 180
         Width = 45
         Height = 22
         MaxValue = 0
@@ -469,15 +491,24 @@ object frmTrayMain: TfrmTrayMain
       end
       object eAdditionalVersionInfo: TEdit
         Left = 344
-        Top = 156
+        Top = 181
         Width = 210
         Height = 21
         TabOrder = 22
       end
+      object edtDBLetter: TEdit
+        Left = 93
+        Top = 75
+        Width = 28
+        Height = 21
+        Alignment = taCenter
+        TabOrder = 24
+        Text = 'D'
+      end
     end
     object pnlStatus: TPanel
       Left = 0
-      Top = 190
+      Top = 208
       Width = 653
       Height = 40
       Align = alTop
@@ -549,9 +580,9 @@ object frmTrayMain: TfrmTrayMain
     end
     object pnlLog: TPanel
       Left = 0
-      Top = 230
+      Top = 248
       Width = 653
-      Height = 419
+      Height = 401
       Align = alClient
       BevelOuter = bvLowered
       TabOrder = 2
@@ -574,7 +605,7 @@ object frmTrayMain: TfrmTrayMain
         Left = 1
         Top = 14
         Width = 651
-        Height = 404
+        Height = 386
         Align = alClient
         Color = clBlack
         Font.Charset = ANSI_CHARSET
@@ -8847,6 +8878,11 @@ object frmTrayMain: TfrmTrayMain
       end
       object N2: TMenuItem
         Caption = '-'
+      end
+    end
+    object DBDrive: TMenuItem
+      Caption = 'DB Drive'
+      object TMenuItem
       end
     end
     object N1: TMenuItem
@@ -42044,6 +42080,10 @@ object frmTrayMain: TfrmTrayMain
         Attributes = [faUnNamed]
         DataType = ftString
         Size = 32
+      end
+      item
+        Name = 'Type'
+        DataType = ftInteger
       end
       item
         Name = 'Active'

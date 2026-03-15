@@ -29,7 +29,7 @@ object FGestSubst: TFGestSubst
       Caption = 'Version Path'
       object Splitter1: TSplitter
         Left = 0
-        Top = 404
+        Top = 373
         Width = 645
         Height = 3
         Cursor = crVSplit
@@ -41,7 +41,7 @@ object FGestSubst: TFGestSubst
         Left = 0
         Top = 0
         Width = 645
-        Height = 404
+        Height = 373
         Align = alClient
         DataSource = dsMain
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -89,9 +89,9 @@ object FGestSubst: TFGestSubst
       end
       object Panel2: TPanel
         Left = 0
-        Top = 407
+        Top = 376
         Width = 645
-        Height = 115
+        Height = 146
         Align = alBottom
         BevelInner = bvLowered
         TabOrder = 1
@@ -104,14 +104,14 @@ object FGestSubst: TFGestSubst
         end
         object Label2: TLabel
           Left = 24
-          Top = 48
+          Top = 40
           Width = 26
           Height = 13
           Caption = 'Path:'
         end
         object Label3: TLabel
           Left = 24
-          Top = 83
+          Top = 68
           Width = 57
           Height = 13
           Caption = 'Description:'
@@ -134,7 +134,7 @@ object FGestSubst: TFGestSubst
         end
         object edtPath: TDBEdit
           Left = 93
-          Top = 45
+          Top = 37
           Width = 309
           Height = 21
           DataField = 'Path'
@@ -143,7 +143,7 @@ object FGestSubst: TFGestSubst
         end
         object edtDescr: TDBEdit
           Left = 93
-          Top = 80
+          Top = 65
           Width = 309
           Height = 21
           DataField = 'Description'
@@ -153,7 +153,7 @@ object FGestSubst: TFGestSubst
         object btnFolder: TcxButton
           Tag = 1
           Left = 408
-          Top = 43
+          Top = 36
           Width = 36
           Height = 25
           OptionsImage.Glyph.SourceDPI = 96
@@ -194,7 +194,7 @@ object FGestSubst: TFGestSubst
         object cbActive: TDBCheckBox
           Left = 152
           Top = 14
-          Width = 97
+          Width = 65
           Height = 17
           Caption = 'Active'
           DataField = 'Active'

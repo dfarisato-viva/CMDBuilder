@@ -101,6 +101,7 @@ type
     AutoConvert: TCheckBox;
     btSql: TcxButton;
     brChangePwd: TcxButton;
+    btnModernInterface: TcxButton;
     gbEditor: TGroupBox;
     Case1: TMenuItem;
     lVersion: TLabel;
@@ -115,6 +116,9 @@ type
     Label5: TLabel;
     eAdditionalVersionInfo: TEdit;
     Label6: TLabel;
+    Label7: TLabel;
+    edtDBLetter: TEdit;
+    DBDrive: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -145,6 +149,7 @@ type
     procedure mnuDatabaseClick(Sender: TObject);
     procedure btXMLClick(Sender: TObject);
     procedure btnUpdVersionClick(Sender: TObject);
+    procedure btnModernInterfaceClick(Sender: TObject);
   private
     FStartTime: TDateTime;
     FLogFileName: string;
@@ -200,7 +205,8 @@ implementation
 
 uses
   Winapi.ShellAPI, System.Win.Registry, TlHelp32, System.UITypes, System.Types,
-  System.IniFiles, IniConfig, XmlFormConverter, ChangePwd, Untitled1, UnParseDproj;
+  System.IniFiles, IniConfig, XmlFormConverter, ChangePwd, Untitled1, UnParseDproj,
+  ModernMainForm;
 
 procedure TfrmTrayMain.LoadSettings;
 Var
@@ -1743,7 +1749,18 @@ begin
   LogMessage('║ Questo è un messaggio di SVN Existed                         ║', lmtSvnExisted);
   LogMessage('║ Questo è un messaggio di SVN Replaced                        ║', lmtSvnReplaced);
   LogMessage('╚═══════════════════════ FINE TEST ════════════════════════════╝');
+end;
 
+procedure TfrmTrayMain.btnModernInterfaceClick(Sender: TObject);
+var
+  ModernForm: TfrmModernMain;
+begin
+  ModernForm := TfrmModernMain.CreateWithParent(Self, Self);
+  try
+    ModernForm.ShowModal;
+  finally
+    ModernForm.Free;
+  end;
 end;
 
 end.

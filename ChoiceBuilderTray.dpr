@@ -9,6 +9,7 @@ uses
   Vcl.Forms,
   Windows,
   TrayMainForm in 'Form\TrayMainForm.pas' {frmTrayMain},
+  ModernMainForm in 'Form\ModernMainForm.pas' {frmModernMain},
   SubstManager in 'SubstManager.pas',
   GestSub in 'Form\GestSub.pas' {FGestSubst},
   ConfigManager in 'ConfigManager.pas',
@@ -59,7 +60,7 @@ begin
 
     WAIT_ABANDONED:
       begin
-        // Il mutex era abbandonato, ma ora è nostro
+        // Il mutex era abbandonato, ma ora ï¿½ nostro
         // Possiamo continuare
         MessageBox(0, 'The previous instance did not close properly',
                    'Information', MB_OK or MB_ICONWARNING);
