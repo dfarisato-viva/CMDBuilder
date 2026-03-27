@@ -35,6 +35,8 @@ TLogCategories = (
     DB: String;
   end;
 
+  /// questa classe e' da rivedere
+
   TFIniConfig = class(TForm)
     eServer: TEdit;
     Label1: TLabel;
